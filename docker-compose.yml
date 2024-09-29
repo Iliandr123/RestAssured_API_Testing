@@ -1,0 +1,18 @@
+version: "2.1"
+services:
+  server:
+    image: jetbrains/teamcity-server:2023.11.1
+    ports:
+      - "8112:8111"
+    volumes:
+      - teamcity_data:/data/teamcity-server/datadir
+      - teamcity_logs:/opt/teamcity/logs
+    mem_limit: 2g
+  agent:
+    image: jetbrains/teamcity-agent:latest
+    environment:
+      - SERVER_URL=http://server:8111
+      - TEAMCITY_SERVER_MEM_OPTS=-Xmx2g -XX:ReservedCodeCacheSize=350m
+volumes:
+  teamcity_data:
+  teamcity_logs:
