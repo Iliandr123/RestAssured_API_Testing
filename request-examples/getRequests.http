@@ -1,0 +1,2 @@
+GET http://admin:admin@localhost:8112/app/rest/buildTypes/id:id
+Accept: application/json
