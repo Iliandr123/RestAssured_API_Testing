@@ -1,2 +1,5 @@
-GET http://admin:admin@localhost:8112/app/rest/buildTypes/id:id
+### Get build by buildTypeId
+GET http://admin2:admin@192.168.0.9:8111/app/rest/projects/name:GZPNJZVEKK
 Accept: application/json
+
+###
