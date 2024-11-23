@@ -4,6 +4,7 @@ import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.ui.pages.BuildsPage;
 import com.example.teamcity.ui.pages.admin.CreateBuildConfigurationPage;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import static com.example.teamcity.api.enums.Endpoint.BUILD_TYPES;
@@ -49,5 +50,10 @@ public class CreateBuildTypeTest extends BaseUiTest {
 
         softy.assertTrue(CreateBuildConfigurationPage.hasErrorMessage("Build configuration with name \"%s\" already exists in project: \"%s\""
                 .formatted(testData.getBuildType().getName(), project.getName())));
+
+        superUserUncheckRequests.getRequest(BUILD_TYPES).read("name:" + buildType.getId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }
