@@ -16,7 +16,7 @@ jobs:
 
       - name: Make mvnw and all scripts executable
         run: chmod -R +x ./
-        
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -39,3 +39,20 @@ jobs:
         continue-on-error: true
         # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity
         run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgroups=Regression
+
+      - name: Run Swagger Coverage
+        continue-on-error: true
+        if: ${{ inputs.package == 'api'}}
+        run: |
+          echo 'verify prerequisites'
+          echo $HOST
+          .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+
+      - name: Save Swagger Coverage
+        uses: actions/upload-artifact@v4
+        if: ${{ inputs.package == 'api'}}
+        with:
+          name: swagger-coverage
+          path: |
+            swagger-coverage-report.html
+            swagger-coverage-results.json
