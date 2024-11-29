@@ -1,18 +1,21 @@
+
 ### Generated test data
 @projectId = {{$random.alphabetic(10)}}
 @buildTypeId = {{$random.alphabetic(10)}}
 
 ### 0. Generate auth token
-GET http://localhost:8112/authenticationTest.html?csrf
+GET http://admin:admin@localhost:8111/authenticationTest.html?csrf
 Accept: application/json
-Authorization: Basic admin admin
+
+> {%
+    client.global.set("token", response.body);
+%}
 
 ### 1. Create project
-# @no-cookie-jar
-POST http://localhost:8112/app/rest/projects
+POST http://admin:admin@localhost:8111/app/rest/projects
 Content-Type: application/json
 Accept: application/json
-Authorization: Basic admin admin
+X-TC-CSRF-Token: {{token}}
 
 {
   "parentProject": {
@@ -24,11 +27,10 @@ Authorization: Basic admin admin
 }
 
 ### 2. Create build configuration
-# @no-cookie-jar
-POST http://localhost:8112/app/rest/buildTypes
+POST http://admin:admin@localhost:8111/app/rest/buildTypes
 Content-Type: application/json
 Accept: application/json
-Authorization: Basic admin admin
+X-TC-CSRF-Token: {{token}}
 
 {
   "id": "{{buildTypeId}}",
@@ -63,21 +65,25 @@ Authorization: Basic admin admin
 }
 
 ### 3. Run build
-# @no-cookie-jar
-POST http://localhost:8112/app/rest/buildQueue
+POST http://admin:admin@localhost:8111/app/rest/buildQueue
 Content-Type: application/json
 Accept: application/json
-Authorization: Basic admin admin
+X-TC-CSRF-Token: {{token}}
 
 {
   "buildType": {
-    "id": "id1"
+    "id": "{{buildTypeId}}"
   }
 }
 
 ### 4. Check build status
-# @no-cookie-jar
-GET http://localhost:8112/app/rest/builds/id:5
+GET http://admin:admin@localhost:8111/app/rest/buildTypes/id:{{buildTypeId}}/builds/running:true
 Content-Type: application/json
 Accept: application/json
-Authorization: Basic admin admin
+X-TC-CSRF-Token: {{token}}
+
+> {%
+    client.test("Run build", function() {
+        client.assert(response.body.state === "", "Response status is not 200");
+    });
+%}
