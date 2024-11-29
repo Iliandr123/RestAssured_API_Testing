@@ -1,2 +1,7 @@
 # RestAssured_API_Testing
-For practice lessons of "Alex Pshe" course for API testing on RestAssured
+
+- 1st run - Succeed - https://github.com/Iliandr123/RestAssured_API_Testing/actions/runs/12085923565
+- 2nd run - Waiting...
+- 3rd run -
+- 4th run -
+- 5th run - 
